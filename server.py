@@ -40,7 +40,12 @@ class WubiHandler(SimpleHTTPRequestHandler):
 
     def end_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
+        path_lower = self.path.lower().split('?')[0]
+        if any(path_lower.endswith(ext) for ext in ('.png', '.jpg', '.jpeg', '.gif', '.ico', '.woff', '.woff2', '.ttf')):
+            # Aggressive caching for images and fonts: 7 days
+            self.send_header('Cache-Control', 'public, max-age=604800, immutable')
+        else:
+            self.send_header('Cache-Control', 'no-cache, must-revalidate')
         super().end_headers()
 
 
