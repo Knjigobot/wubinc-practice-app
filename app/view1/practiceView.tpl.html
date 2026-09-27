@@ -85,28 +85,24 @@
                      style="width:90px"/>
 
                 </span>
-                <span ng-if="isHanzi(data.promptCharacter)" style="font-size: 60px; line-height: 1.1;">
-                    {{data.promptCharacter.character}}
+                <span ng-if="isHanzi(data.promptCharacter)">
+                    <!-- When multiple options exist for this code, display all options side by side -->
+                    <div class="hanzi-prompt-row" ng-if="getCandidates(data.promptCharacter).length > 1">
+                        <span ng-repeat="cand in getCandidates(data.promptCharacter) track by $index"
+                              class="hanzi-option"
+                              ng-class="{'current-option': cand === data.promptCharacter.character}"
+                              ng-click="selectCandidate(cand)"
+                              title="Click or press {{$index + 1}} to select">
+                            <span class="option-num">{{$index + 1}}.</span>
+                            <span class="option-char">{{cand}}</span>
+                        </span>
+                    </div>
+                    <!-- When only 1 option exists, display it centered -->
+                    <div class="hanzi-single" ng-if="getCandidates(data.promptCharacter).length <= 1">
+                        {{data.promptCharacter.character}}
+                    </div>
                 </span>
 
-            </div>
-
-            <!-- Multiple choices / candidates if key combination has collisions -->
-            <div class="candidate-container" ng-if="isHanzi(data.promptCharacter) && getCandidates(data.promptCharacter).length > 1">
-                <div class="candidate-header">
-                    <span class="candidate-badge">{{getCandidates(data.promptCharacter).length}} choices</span>
-                    <span class="candidate-code">Code: <strong>{{data.promptCharacter.wubiCode[0].toUpperCase()}}</strong></span>
-                    <span class="candidate-tip">(Click or press 1-{{getCandidates(data.promptCharacter).length > 9 ? 9 : getCandidates(data.promptCharacter).length}} to switch)</span>
-                </div>
-                <div class="candidate-list">
-                    <span ng-repeat="cand in getCandidates(data.promptCharacter) track by $index"
-                          class="candidate-choice"
-                          ng-class="{'current-choice': cand === data.promptCharacter.character}"
-                          ng-click="selectCandidate(cand)">
-                        <span class="cand-num">{{$index + 1}}.</span>
-                        <span class="cand-char">{{cand}}</span>
-                    </span>
-                </div>
             </div>
 
 
