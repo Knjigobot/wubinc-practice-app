@@ -86,18 +86,14 @@
 
                 </span>
                 <span ng-if="isHanzi(data.promptCharacter)">
-                    <!-- When multiple options exist for this code, display all options side by side -->
+                    <!-- When multiple characters exist for this code, display them side by side -->
                     <div class="hanzi-prompt-row" ng-if="getCandidates(data.promptCharacter).length > 1">
                         <span ng-repeat="cand in getCandidates(data.promptCharacter) track by $index"
-                              class="hanzi-option"
-                              ng-class="{'current-option': cand === data.promptCharacter.character}"
-                              ng-click="selectCandidate(cand)"
-                              title="Click or press {{$index + 1}} to select">
-                            <span class="option-num">{{$index + 1}}.</span>
-                            <span class="option-char">{{cand}}</span>
+                              class="hanzi-char">
+                            {{cand}}
                         </span>
                     </div>
-                    <!-- When only 1 option exists, display it centered -->
+                    <!-- When only 1 character exists, display it centered -->
                     <div class="hanzi-single" ng-if="getCandidates(data.promptCharacter).length <= 1">
                         {{data.promptCharacter.character}}
                     </div>

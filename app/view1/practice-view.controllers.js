@@ -139,17 +139,6 @@
                 return dataService.getCandidates(char);
             };
 
-            $scope.selectCandidate = function (candChar) {
-                if (!$scope.data.promptCharacter) return;
-                var currentCode = $scope.data.promptCharacter.wubiCode;
-                var newChar = new Hanzi({
-                    character: candChar,
-                    wubiCode: currentCode
-                });
-                $scope.data.promptCharacter = newChar;
-                tutor.set(newChar);
-            };
-
             $scope.tutor = tutor;
             $scope.input = {inputSequence: tutor.inputSequence};
 
