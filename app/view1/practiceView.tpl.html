@@ -1,0 +1,167 @@
+<div ng-controller="FeedbackController">
+
+
+    <div layout="row" layout-margin ng-if="debugSettings.showKeystrokes">
+
+        keystrokes: {{display.display}}
+
+    </div>
+
+    <div ng-controller="PromptController">
+
+        <div ng-controller="KeyBoardInput" ng-enter>
+
+            <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right">
+                <md-toolbar class="md-theme-light">
+                    <h1 class="md-toolbar-tools">Character Help</h1>
+                </md-toolbar>
+                <md-content ng-controller="RightSideNavController" class="md-padding">
+                    <md-button ng-click="close()" class="md-primary">
+                        Close
+                    </md-button>
+                    <div ng-if="isHanzi(data.promptCharacter)" class="wubi-help-section">
+                        <div class="wubi-help-squares">
+                            <div ng-repeat="letter in getWubiKeys(data.promptCharacter) track by $index" class="wubi-help-square-col">
+                                <div class="wubi-help-square" ng-class="{'key-pressed': $index < tutor.inputSequence.length}">
+                                    <img ng-src="img/keys/key_{{letter}}.png" alt="{{letter.toUpperCase()}}"/>
+                                </div>
+                                <div class="wubi-key-indicator" ng-class="{'active': $index < tutor.inputSequence.length}"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="!isHanzi(data.promptCharacter)">
+                        <div>
+
+                            This character component is located on the
+                          <span class="keyboard-key"> {{data.promptCharacter.key.toUpperCase()}}
+                                </span> key.
+                        </div>
+
+
+                        <div>
+                            Group: <span ng-bind-html="data.characterGroupSymbol " class="character-group"> </span>
+                        </div>
+                        <div>
+
+                            (First Stroke is in the {{data.promptCharacter.group}} group)
+                        </div>
+                    </div>
+
+                </md-content>
+            </md-sidenav>
+
+        </div>
+
+
+        <show-answer visible="display.showAnswerByService"></show-answer>
+
+            <!--
+        <div>
+            <md-button ng-click="prompt()" class="md-primary">
+                Next>>
+            </md-button>
+        </div>
+         -->
+
+
+        <div ng-if="data.promptCharacter">
+
+            <section layout="row" layout-sm="column" layout-align="center center">
+                <div class="signal-container">
+
+                    <div class="wrongAnswer" ng-show="display.lastAnswerWrong"> X
+                    </div>
+                    <div class="correctAnswer" ng-show="display.lastAnswerCorrect"> &#x2713;
+                    </div>
+                </div>
+
+            </section>
+
+            <div class="prompt">
+                <span ng-if="!isHanzi(data.promptCharacter)">
+
+                <img ng-src="img/hanzi/{{data.promptCharacter.character}}" alt="" class="keyboard-layout"
+                     ng-class="{warningIndicator: data.showWarning}"
+                     style="width:90px"/>
+
+                </span>
+                <span ng-if="isHanzi(data.promptCharacter)" style="font-size: 60px; line-height: 1.1;">
+                    {{data.promptCharacter.character}}
+                </span>
+
+            </div>
+
+            <!-- Multiple choices / candidates if key combination has collisions -->
+            <div class="candidate-container" ng-if="isHanzi(data.promptCharacter) && getCandidates(data.promptCharacter).length > 1">
+                <div class="candidate-header">
+                    <span class="candidate-badge">{{getCandidates(data.promptCharacter).length}} choices</span>
+                    <span class="candidate-code">Code: <strong>{{data.promptCharacter.wubiCode[0].toUpperCase()}}</strong></span>
+                    <span class="candidate-tip">(Click or press 1-{{getCandidates(data.promptCharacter).length > 9 ? 9 : getCandidates(data.promptCharacter).length}} to switch)</span>
+                </div>
+                <div class="candidate-list">
+                    <span ng-repeat="cand in getCandidates(data.promptCharacter) track by $index"
+                          class="candidate-choice"
+                          ng-class="{'current-choice': cand === data.promptCharacter.character}"
+                          ng-click="selectCandidate(cand)">
+                        <span class="cand-num">{{$index + 1}}.</span>
+                        <span class="cand-char">{{cand}}</span>
+                    </span>
+                </div>
+            </div>
+
+
+            <div>
+
+                <section layout="row" layout-sm="column" layout-align="center center">
+                    <div style="width:200px; height:14px; margin-top: 4px;">
+
+
+                        <md-progress-linear md-theme="blue" md-mode="determinate"
+                                            ng-value="data.percent"></md-progress-linear>
+                    </div>
+                </section>
+
+                <div layout="row" layout-align="center center" ng-show="display.showCorrectAnswer" style="min-height: 35px">
+                    <div flex="20"></div>
+                    <div flex="50" class="correction-hint">
+                        Sorry that was wrong
+                        <span ng-if="!isHanzi(data.promptCharacter)">
+
+                        , this component belongs to the
+                        <span ng-bind-html="data.characterGroupSymbol " class="character-group"> </span>group
+                        </span>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Always-on character help squares directly between prompt and keyboard -->
+            <div class="wubi-help-inbetween" ng-if="getWubiKeys(data.promptCharacter).length > 0">
+                <div class="wubi-help-squares">
+                    <div ng-repeat="letter in getWubiKeys(data.promptCharacter) track by $index" class="wubi-help-square-col">
+                        <div class="wubi-help-square" ng-class="{'key-pressed': $index < tutor.inputSequence.length}">
+                            <img ng-src="img/keys/key_{{letter}}.png" alt="{{letter.toUpperCase()}}"/>
+                        </div>
+                        <div class="wubi-key-indicator" ng-class="{'active': $index < tutor.inputSequence.length}"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div ng-show="display.showGroup"> {{data.promptCharacter.group}}</div>
+
+
+    <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center" ng-show="display.showKeyBoard">
+    <span>
+        <img src="img/wubi06_custom.png" alt="Wubi 06 Keyboard Layout" class="keyboard-layout"/>
+        </span>
+    </md-whiteframe>
+</div>
+
+
+
+

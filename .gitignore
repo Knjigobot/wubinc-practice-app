@@ -1,0 +1,14 @@
+logs/*
+!.gitkeep
+node_modules/
+tmp
+.DS_Store
+.idea
+experiment/*
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.log

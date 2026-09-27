@@ -1,0 +1,22 @@
+'use strict';
+
+// Declare app level module which depends on views, and components
+angular.module('wubi', [
+    'ngRoute',
+    'ngMaterial',
+    'ngSanitize',
+    'ui.bootstrap',
+
+    'wubi.practiceView',
+    'wubi.setupView',
+    'wubi.lookupView',
+    'wubi.infoView'
+
+]).
+    config(['$routeProvider', function ($routeProvider) {
+        $routeProvider.otherwise({redirectTo: '/practice'});
+    }])
+    .config(function (localStorageServiceProvider) {
+        localStorageServiceProvider
+            .setPrefix('wubiApp');
+    });
