@@ -75,11 +75,26 @@
                             return;
                         }
 
-                        if (!scope.keyboard || scope.keyboard.isFocused === false) {
+                        // Allow browser shortcuts (Ctrl, Alt, Meta) such as Ctrl+R, Ctrl+F5, Ctrl+W
+                        if (event.ctrlKey || event.altKey || event.metaKey) {
                             return;
                         }
 
                         var keyPressed = event.which || event.keyCode;
+
+                        // Allow function keys F1-F12 (F5 = 116 for refresh, F12 = 123 for devtools, etc.)
+                        if (keyPressed >= 112 && keyPressed <= 123) {
+                            return;
+                        }
+
+                        // Allow Tab key
+                        if (keyPressed === 9) {
+                            return;
+                        }
+
+                        if (!scope.keyboard || scope.keyboard.isFocused === false) {
+                            return;
+                        }
                         if (keyPressed === KEYS.ESC) {
                             safeApply(function () {
                                 scope.stopFocusInput();
