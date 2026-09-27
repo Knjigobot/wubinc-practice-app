@@ -428,5 +428,60 @@ md-sidenav.md-sidenav-right {
   color: #1565c0;
 }
 
+/* ==========================================================================
+   Sources & References Card in Info Tab
+   ========================================================================== */
+.sources-card {
+  background: #f0f7ff;
+  border: 2px solid #64b5f6;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 3px 12px rgba(25, 118, 210, 0.10);
+}
+
+.sources-title {
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: #0d47a1;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.source-item {
+  background: #ffffff;
+  border: 1px solid #bbdefb;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.source-item:last-child {
+  margin-bottom: 0;
+}
+
+.source-badge {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #1565c0;
+  margin-bottom: 6px;
+}
+
+.source-url {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1976d2 !important;
+  word-break: break-all;
+  text-decoration: underline !important;
+}
+
+.source-desc {
+  font-size: 13px;
+  color: #475569;
+  margin-top: 4px;
+}
+
 
 
