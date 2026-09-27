@@ -16,12 +16,12 @@
 
                     },
                     queueInit: function (dataService, runner) {
-                        if (!runner.learningQueue || runner.learningQueue.length === 0) {
-                            return dataService.getHanzisByLength(4).then(function (fours) {
-                                runner.initHanziQueue(fours, 4);
-                                return fours;
-                            });
-                        }
+                        return dataService.getHanzis().then(function (allHanzis) {
+                            if (!runner.fullHanziList || runner.fullHanziList.length === 0) {
+                                runner.initHanziQueue(allHanzis, 4);
+                            }
+                            return allHanzis;
+                        });
                     }
 
                 }

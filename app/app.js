@@ -9,6 +9,7 @@ angular.module('wubi', [
 
     'wubi.practiceView',
     'wubi.setupView',
+    'wubi.charactersView',
     'wubi.lookupView',
     'wubi.infoView'
 
@@ -18,5 +19,5 @@ angular.module('wubi', [
     }])
     .config(function (localStorageServiceProvider) {
         localStorageServiceProvider
-            .setPrefix('wubiApp');
+            .setPrefix('wubi06Trainer');
     });

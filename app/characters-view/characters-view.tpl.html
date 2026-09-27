@@ -1,0 +1,116 @@
+<div layout="column" layout-align="start center" class="characters-container">
+
+    <div class="characters-card">
+        <h2 class="characters-title">Wubi 06 Character Browser (100k+ Database)</h2>
+        <p class="characters-subtitle">
+            Choose or scrub to any character out of the 100k+ database. The position automatically syncs with your practice progress and persists in localStorage.
+        </p>
+
+        <!-- Position Selector & Controls -->
+        <div class="char-position-panel">
+            <div class="char-number-row">
+                <span class="char-label">Current Character:</span>
+                <span class="char-hash">#</span>
+                <input type="number" min="1" max="{{totalCount}}"
+                       ng-model="displayNumber"
+                       ng-change="onNumberChange()"
+                       ng-keyup="$event.keyCode === 13 && onNumberChange()"
+                       class="char-input-field"
+                       aria-label="Character index" />
+                <span class="char-total-badge">of {{totalCount | number}}</span>
+            </div>
+
+            <!-- Stepper Buttons -->
+            <div class="char-stepper-row">
+                <md-button class="md-raised char-step-btn" ng-click="step(-1000)" title="Back 1,000">-1000</md-button>
+                <md-button class="md-raised char-step-btn" ng-click="step(-100)" title="Back 100">-100</md-button>
+                <md-button class="md-raised md-primary char-nav-btn" ng-click="step(-1)" title="Previous character">&larr; Prev</md-button>
+                <md-button class="md-raised md-primary char-nav-btn" ng-click="step(1)" title="Next character">Next &rarr;</md-button>
+                <md-button class="md-raised char-step-btn" ng-click="step(100)" title="Forward 100">+100</md-button>
+                <md-button class="md-raised char-step-btn" ng-click="step(1000)" title="Forward 1,000">+1000</md-button>
+            </div>
+
+            <!-- Fast Scrub Slider -->
+            <div class="char-slider-wrapper">
+                <input type="range" min="1" max="{{totalCount}}"
+                       ng-model="sliderValue"
+                       ng-change="onSliderChange()"
+                       class="char-range-slider"
+                       aria-label="Character scrub slider" />
+            </div>
+
+            <!-- Quick Jump Shortcuts -->
+            <div class="char-quick-jumps">
+                <span class="quick-jump-label">Jump to:</span>
+                <button type="button" class="quick-chip" ng-click="jumpTo(1)">Start (#1)</button>
+                <button type="button" class="quick-chip" ng-click="jumpTo(10000)">10,000</button>
+                <button type="button" class="quick-chip" ng-click="jumpTo(25000)">25,000</button>
+                <button type="button" class="quick-chip" ng-click="jumpTo(50000)">50,000</button>
+                <button type="button" class="quick-chip" ng-click="jumpTo(75000)">75,000</button>
+                <button type="button" class="quick-chip" ng-click="jumpTo(100000)">100,000</button>
+                <button type="button" class="quick-chip" ng-click="jumpTo(totalCount)">End (#{{totalCount | number}})</button>
+            </div>
+        </div>
+
+        <!-- Character & Variants Display (Identical to Practice Tab) -->
+        <div class="char-preview-box">
+            <div class="preview-header">Character &amp; Variants (Code: {{wubiCode}}):</div>
+
+            <!-- Prompt display using identical practice styling -->
+            <div class="prompt" style="margin-top: 10px; margin-bottom: 10px;">
+                <!-- When multiple characters exist for this code, display them side by side -->
+                <div class="hanzi-prompt-row" ng-if="variants.length > 1">
+                    <span ng-repeat="cand in variants track by $index" class="hanzi-char">
+                        {{cand}}
+                    </span>
+                </div>
+                <!-- When only 1 character exists, display it centered -->
+                <div class="hanzi-single" ng-if="variants.length <= 1">
+                    {{currentCharacter.character}}
+                </div>
+            </div>
+
+            <!-- Wubi 06 Root Breakdown Squares -->
+            <div class="wubi-help-inbetween" ng-if="wubiKeys.length > 0" style="margin-top: 15px;">
+                <div class="wubi-help-squares">
+                    <div ng-repeat="letter in wubiKeys track by $index" class="wubi-help-square-col">
+                        <div class="wubi-help-square">
+                            <img ng-src="img/keys/key_{{letter}}.png" alt="{{letter.toUpperCase()}}"/>
+                        </div>
+                        <div class="key-letter-tag">{{letter.toUpperCase()}}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Collision info -->
+            <div class="variant-info" ng-if="variants.length > 1">
+                <span>{{variants.length}} characters share code <strong>{{wubiCode}}</strong></span>
+            </div>
+            <div class="variant-info" ng-if="variants.length <= 1">
+                <span>Unique character for code <strong>{{wubiCode}}</strong></span>
+            </div>
+
+            <!-- Direct Action Button to Practice -->
+            <div style="margin-top: 20px;">
+                <md-button class="md-raised md-warn practice-jump-btn" ng-click="goToPractice()">
+                    &#9654; Practice This Character (Go to Practice Tab)
+                </md-button>
+            </div>
+        </div>
+
+        <!-- Quick Search Tool -->
+        <div class="char-search-panel">
+            <form ng-submit="searchChar()" layout="row" layout-align="center center">
+                <input type="text" ng-model="searchQuery"
+                       placeholder="Find character or Wubi code (e.g. 是 or jghu)..."
+                       class="char-search-input" />
+                <md-button type="submit" class="md-raised md-primary search-submit-btn">
+                    Search &amp; Jump
+                </md-button>
+            </form>
+            <div class="search-msg" ng-if="searchMessage">{{searchMessage}}</div>
+        </div>
+
+    </div>
+
+</div>

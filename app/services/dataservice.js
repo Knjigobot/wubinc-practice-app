@@ -8,6 +8,7 @@ angular.module('DataServicesModule', ['LocalStorageModule', 'CharacterModule', '
         var CHARACTERS_KEY = 'characters';
         var CACHE = 'cache';
         var QUEUE_KEY = 'QUEUE';
+        var CHAR_INDEX_KEY = 'currentCharIndex';
         var service = {
             localData: null,
             cache: null,
@@ -16,7 +17,18 @@ angular.module('DataServicesModule', ['LocalStorageModule', 'CharacterModule', '
 
                 localStorageService.remove(CHARACTERS_KEY);
                 localStorageService.remove(CACHE);
+                localStorageService.remove(CHAR_INDEX_KEY);
                 this.getRootCharacters();
+            },
+            saveCurrentCharIndex: function (idx) {
+                localStorageService.set(CHAR_INDEX_KEY, idx);
+            },
+            loadCurrentCharIndex: function () {
+                var val = localStorageService.get(CHAR_INDEX_KEY);
+                if (val !== null && val !== undefined && !isNaN(val)) {
+                    return parseInt(val, 10);
+                }
+                return 0;
             },
             saveQueue: function (list) {
                 this.save(QUEUE_KEY, list);
@@ -145,6 +157,21 @@ angular.module('DataServicesModule', ['LocalStorageModule', 'CharacterModule', '
                     code = charOrCode.wubiCode[0].toLowerCase().trim();
                 }
                 return (code && this.candidatesByCode[code]) ? this.candidatesByCode[code] : [];
+            },
+
+            findHanziIndex: function (query) {
+                if (!query || !this.parsedHanzis) return -1;
+                var q = query.trim().toLowerCase();
+                for (var i = 0; i < this.parsedHanzis.length; i++) {
+                    var h = this.parsedHanzis[i];
+                    if (h.character === query.trim()) {
+                        return i;
+                    }
+                    if (h.wubiCode && h.wubiCode[0] && h.wubiCode[0].toLowerCase().trim() === q) {
+                        return i;
+                    }
+                }
+                return -1;
             },
 
             getHanzis: function () {
